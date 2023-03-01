@@ -57,6 +57,9 @@ const blogSlice = createSlice({
   },
   extraReducers(builder) {
     builder
+      .addCase('', (state, action: any) => {
+        state.postList = action.payload
+      })
       .addMatcher(
         (action) => action.type.includes('cancel'),
         (state, action) => {
