@@ -19,6 +19,12 @@ export const getPostList = createAsyncThunk('blog/getPostList', async (_, thunkA
   return response.data
 })
 
+export const addPost = createAsyncThunk('blog/addPost', async (body: Omit<Post, 'id'>, thunkAPI) => {
+  const response = await http.get<Post>('post', { signal: thunkAPI.signal })
+
+  return response.data
+})
+
 const blogSlice = createSlice({
   name: 'blog',
   initialState,
@@ -48,24 +54,27 @@ const blogSlice = createSlice({
         return false
       })
       state.editingPost = null
-    },
-    addPost: {
-      reducer: (state, action: PayloadAction<Post>) => {
-        const post = action.payload
-        state.postList.push(post)
-      },
-      prepare: (post: Omit<Post, 'id'>) => ({
-        payload: {
-          ...post,
-          id: nanoid()
-        }
-      })
     }
+    // addPost: {
+    //   reducer: (state, action: PayloadAction<Post>) => {
+    //     const post = action.payload
+    //     state.postList.push(post)
+    //   },
+    //   prepare: (post: Omit<Post, 'id'>) => ({
+    //     payload: {
+    //       ...post,
+    //       id: nanoid()
+    //     }
+    //   })
+    // }
   },
   extraReducers(builder) {
     builder
       .addCase(getPostList.fulfilled, (state, action) => {
         state.postList = action.payload
+      })
+      .addCase(addPost.fulfilled, (state, action) => {
+        state.postList.push(action.payload)
       })
       .addMatcher(
         (action) => action.type.includes('cancel'),
