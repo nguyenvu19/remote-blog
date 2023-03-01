@@ -1,4 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit'
+import { useDispatch } from 'react-redux'
 import blogReducer from './pages/blog/blog.slice'
 
 export const store = configureStore({
@@ -9,3 +10,6 @@ export const store = configureStore({
 export type RootState = ReturnType<typeof store.getState>
 
 export type AppDispatch = typeof store.dispatch
+
+// Use when dispatch createAsyncThunk
+export const useAppDispatch = () => useDispatch<AppDispatch>()

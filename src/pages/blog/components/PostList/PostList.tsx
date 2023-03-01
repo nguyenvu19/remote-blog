@@ -1,39 +1,48 @@
-import { useSelector, useDispatch } from 'react-redux'
 import { useEffect } from 'react'
+import { useSelector } from 'react-redux'
 
+import { deletePost, getPostList, startEditingPost } from 'pages/blog/blog.slice'
+import { RootState, useAppDispatch } from 'store'
 import PostItem from '../PostItem'
-import { deletePost, startEditingPost } from 'pages/blog/blog.slice'
-import http from 'utils/http'
-import { RootState } from 'store'
 
 export default function PostList() {
   const postList = useSelector((state: RootState) => state.blog.postList)
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
 
+  // createSlice
+  // useEffect(() => {
+  //   const controller = new AbortController()
+
+  //   http
+  //     .get('posts', { signal: controller.signal })
+  //     .then((res) => {
+  //       const postsListResult = res.data
+
+  //       dispatch({
+  //         type: 'blog/getPostListSuccess',
+  //         payload: postsListResult
+  //       })
+  //     })
+  //     .catch((err) => {
+  //       if (!(err.code === 'ERR_CANCELED')) {
+  //         dispatch({
+  //           type: 'blog/getPostListFailed',
+  //           payload: err.message
+  //         })
+  //       }
+  //     })
+
+  //   return () => {
+  //     controller.abort()
+  //   }
+  // }, [dispatch])
+
+  // createAsyncThunk
   useEffect(() => {
-    const controller = new AbortController()
-
-    http
-      .get('posts', { signal: controller.signal })
-      .then((res) => {
-        const postsListResult = res.data
-
-        dispatch({
-          type: 'blog/getPostListSuccess',
-          payload: postsListResult
-        })
-      })
-      .catch((err) => {
-        if (!(err.code === 'ERR_CANCELED')) {
-          dispatch({
-            type: 'blog/getPostListFailed',
-            payload: err.message
-          })
-        }
-      })
+    const promise = dispatch(getPostList())
 
     return () => {
-      controller.abort()
+      promise.abort()
     }
   }, [dispatch])
 
