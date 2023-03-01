@@ -14,14 +14,15 @@ const initialState: BlogState = {
 }
 
 export const getPostList = createAsyncThunk('blog/getPostList', async (_, thunkAPI) => {
-  const response = await http.get<Post[]>('post', { signal: thunkAPI.signal })
+  const response = await http.get<Post[]>('posts', { signal: thunkAPI.signal })
 
   return response.data
 })
 
 export const addPost = createAsyncThunk('blog/addPost', async (body: Omit<Post, 'id'>, thunkAPI) => {
-  const response = await http.get<Post>('post', { signal: thunkAPI.signal })
-
+  const response = await http.post<Post>('posts', body, {
+    signal: thunkAPI.signal
+  })
   return response.data
 })
 
